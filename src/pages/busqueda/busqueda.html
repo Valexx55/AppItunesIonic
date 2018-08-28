@@ -1,0 +1,117 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Búsqueda en iTunes
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar animated="true" [(ngModel)]="termino" (search)="buscar($event)" placeholder="Introduce canción ...">
+  </ion-searchbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)">
+      <ion-segment-button value="cards">
+        CARDS
+      </ion-segment-button>
+      <ion-segment-button value="cubos">
+        CUBOS
+      </ion-segment-button>
+      <ion-segment-button value="desliz">
+        DESLIZ
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-slides #mySlider (ionSlideDidChange)="cambioSlide(slide)">
+    <ion-slide *ngFor="let slide of slides">
+      <div *ngIf="(selectedSegment=='cubos')">
+        <div *ngIf="lista_canciones">
+          <ion-slides effect="cube" pager="true" paginationType="progress" loop="true" slidesPerView="1" style="background-color:rgb(66, 66, 248)">
+            <ion-slide *ngFor="let cancion of lista_canciones" style="background-color:white">
+              <h3>{{cancion.artistName}}</h3>
+              <img data-src="{{cancion.artworkUrl100}}">
+              <br>
+              <button ion-button color="light" (click)="favorito(cancion)">
+                <ion-icon [name]="cancion.estadofav"></ion-icon>
+                Favorito
+              </button>
+              <h3>{{cancion.trackName}} </h3>
+              <audio src="{{cancion.previewUrl}}" controls="true"></audio>
+            </ion-slide>
+          </ion-slides>
+        </div>
+      </div>
+      <div *ngIf="(selectedSegment=='desliz')">
+        <div *ngIf="lista_canciones">
+          <ion-list class="list-avatar-page">
+            <ion-item-sliding *ngFor="let cancion of lista_canciones; let indice = index">
+              <ion-item>
+                <ion-avatar item-start>
+                  <img src="{{cancion.artworkUrl100}}">
+                </ion-avatar>
+                <h2>{{cancion.trackName}}</h2>
+                <h3>{{cancion.artistName}}</h3>
+                <audio hidden controls id="{{cancion.trackId}}">
+                  <source src={{cancion.previewUrl}} type="audio/mpeg">
+                </audio>
+                <!--<ion-note item-end>{{cancion.trackPrice}}{{cancion.currency}}</ion-note>-->
+              </ion-item>
+              <ion-item-options side="right">
+                <button ion-button color="primary" (click)="playMuestra(cancion)">
+                  <ion-icon [name]="cancion.estado"></ion-icon>
+                  Muestra
+                </button>
+                <button ion-button color="light" (click)="favorito(cancion)">
+                  <ion-icon [name]="cancion.estadofav"></ion-icon>
+                  Favorito
+                </button>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ion-list>
+        </div>
+      </div>
+      <div *ngIf="(selectedSegment=='cards')">
+        <div *ngIf="lista_canciones">
+          <div *ngFor="let cancion of lista_canciones">
+            <hr>
+            <ion-card>
+              <ion-card-content>
+                <ion-row>
+                  <ion-col col-4></ion-col>
+                  <ion-col col-4>
+                    <img src="{{cancion.artworkUrl100}}" alt="Portada" style="height: 100px;width: 100px;">
+                  </ion-col>
+                  <ion-col col-4></ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col col-2></ion-col>
+                  <ion-col col-8>
+                    <button ion-button color="light" (click)="favorito(cancion)">
+                      <!--(click)="playMuestra({{cancion.previewUrl}})"-->
+                      <ion-icon [name]="cancion.estadofav"></ion-icon>
+                      Favorito
+                    </button>
+                  </ion-col>
+                  <ion-col col-2></ion-col>
+                </ion-row>
+                <ion-card-title style="font-size:18px">
+                  {{cancion.artistName}} - {{cancion.trackName}}
+                </ion-card-title>
+                <ion-row justify-content: center>
+                  <p>
+                    <audio src="{{cancion.previewUrl}}" controls></audio>
+                    <br>
+                  </p>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

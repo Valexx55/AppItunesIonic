@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Mi lista de favoritos</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="(!lista_favoritos||lista_favoritos.length==0)">
+    <br>
+    <p>     No ha almacenado ningún favorito</p>
+  </div>
+  <ion-list>
+    <button ion-item *ngFor="let cancion of lista_favoritos">
+      <ion-avatar item-start><img src="{{cancion.artworkUrl100}}"></ion-avatar >
+        <audio hidden id="{{cancion.trackId}}">
+          <source src={{cancion.previewUrl}} type="audio/mpeg">
+        </audio>
+        <ion-icon (click)="borrarCancionDeFavoritos(cancion)" item-right name="trash"></ion-icon>
+        <ion-icon (click)="reproducirCancion(cancion)" item-right [name]="cancion.estado"></ion-icon>  
+      <div class="item-note">{{cancion.trackName}}</div>
+    </button>
+  </ion-list>
+</ion-content>
